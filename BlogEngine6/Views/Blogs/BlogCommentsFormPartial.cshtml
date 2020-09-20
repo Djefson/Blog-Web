@@ -1,0 +1,28 @@
+﻿@model BlogEngine6.Models.ViewModels.CreateBlogCommentViewModel
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm())
+    {
+    @Html.AntiForgeryToken()
+
+    <div class="blogCommentForm">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="BlogID" value=@ViewBag.BlogID />
+        <div class="form-group">
+            @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control", @placeholder = "Give your feedback..." } })
+            @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <input type="button" value="Post" class="btn btn-success" onclick="postBlogComment(this, @ViewBag.Count);" />
+        </div>
+
+    </div>
+    }
+}
+else{
+    <p>Please log in to post a comment.</p>
+}

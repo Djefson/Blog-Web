@@ -1,0 +1,15 @@
+﻿
+@model IEnumerable<BlogEngine6.Models.Tag>
+
+<div class="areaHeader">
+    <div class="areaTitle">Popular Tags</div>
+</div>
+
+<div class="tagList">
+
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Action("Index", "Blogs", new { tag=item.Name}, Request.Url.Scheme)">@Html.DisplayFor(modelItem => item.Name)</a>
+    }
+
+</div>

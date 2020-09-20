@@ -1,0 +1,49 @@
+﻿@using BlogEngine6.Models
+@model LoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutModal.cshtml";
+    ViewBag.ModalTitle = "Login";
+    ViewBag.ModalId = "ModalLogin";
+}
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+<div class='modal-body'>
+    @Html.AntiForgeryToken()
+
+    <div class="row accountForm">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe)
+            </div>
+            <div class="form-group">
+                <p>
+                    <a href="#" data-dismiss="modal" data-toggle="modal" onclick="setTimeout(function () { $('#ModalRegister').modal('show') }, 375);">Register as a new user</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</div>
+
+<div class='modal-footer'>
+    <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+    <input type="submit" value="Log in" class="btn btn-success" />
+</div>
+
+}

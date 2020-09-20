@@ -1,0 +1,67 @@
+﻿@model BlogEngine6.Models.ViewModels.CreateBlogViewModel
+
+@{
+    ViewBag.Title = "New Blog Post";
+}
+
+<h2>New Blog Post</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal blogForm">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="Content">Tell your story...</label>
+            @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @id = "createBlogContentInput", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="row form-group">
+            <div class="col-xs-4">
+                <button class="btn btn-warning showBlogTags" onclick="$('.blogTagsDiv').slideToggle(); return false;">Tag it!</button>
+                &nbsp;<a class="btn btn-primary" href="../Tags/Index" role="button">Add Tags</a>&nbsp;&nbsp;
+               <input type="submit" value="Post" class="btn btn-success submitBtn" /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group blogTagsDiv" style="display: none;">
+                    <select multiple="multiple" id="tagSelect" name="selectedTags">
+                        @{
+                            List<BlogEngine6.Models.Tag> tags = ViewBag.BlogTags;
+
+                            foreach (var tag in tags)
+                            {
+                                <option value='@tag.TagID'>@tag.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-8">
+               &nbsp;</div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/Custom/jquery.multi-select.js"></script>
+    <script>
+        //$.validator.setDefaults({ ignore: '' });
+        CKEDITOR.replace('createBlogContentInput');
+        $('#tagSelect').multiSelect();
+    </script>
+}

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<BlogEngine6.Models.FeaturedBlog>
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Manage Editor Picks</h2>
+
+@foreach (var item in Model)
+{
+    <div class="row blogItem" data-id=@item.BlogID>
+        <div class="col-md-10">
+
+            <div>
+                <h3 class="blogPostTitle"><a href="@Url.Action("Details", "Blogs", new { id=item.BlogID }, Request.Url.Scheme)">@Html.DisplayFor(modelItem => item.Blog.Title)</a></h3>
+                <p class="blogPostDate"><b>Post Date: </b>@Html.DisplayFor(modelItem => item.Blog.PostDate)</p>
+                <p class="blogPostDate"><b>Featured Date: </b>@Html.DisplayFor(modelItem => item.FeatureDate)</p>
+            </div>
+
+        </div>
+
+        <div class="col-md-2 blogButtons">
+            @using (Html.BeginForm(null, null, null, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value=@item.BlogID />
+                    <p><input type="button" value="Remove" class="btn btn-danger" onclick="removeFeaturedBlog_Confirm(this);" /></p>
+                }
+            </div>
+        </div>
+
+}

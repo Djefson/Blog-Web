@@ -1,0 +1,21 @@
+﻿@model IEnumerable<BlogEngine6.Models.ViewModels.FeaturedPostViewModel>
+
+
+
+<div class="areaHeader">
+    <div class="areaTitle">@ViewBag.Title</div>
+    <div class="areaDescription">@ViewBag.Description</div>
+</div>
+
+<ul class="featuredPostsList">
+
+@foreach (var item in Model)
+{
+    <li>
+        <div class="blogTitle"><a href="@Url.Action("Details", "Blogs", new { id=item.BlogID }, Request.Url.Scheme)">@Html.DisplayFor(modelItem => item.Title)</a></div>
+        <div class="blogAuthor"><a href="@Url.Action("Index", "Blogs", new { author=item.Author }, Request.Url.Scheme)">@Html.DisplayFor(modelItem => item.Author)</a></div>
+    </li>
+}
+
+</ul>
+

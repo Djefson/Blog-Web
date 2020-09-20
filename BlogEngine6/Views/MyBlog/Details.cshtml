@@ -1,0 +1,43 @@
+﻿@model BlogEngine6.Models.ViewModels.ViewBlogViewModel
+
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <h2>@Html.DisplayFor(model => model.Title)</h2>
+    <p>@Html.DisplayFor(model => model.PostDate)</p>
+
+    <div style="margin-top: 15px;">
+        <p style="display: inline-block;">@Html.ActionLink("Edit", "Edit", new { id = Model.BlogID }, new { @class = "btn btn-warning" })</p>
+
+        @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @style = "display: inline-block;" }))
+            {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value=@Model.BlogID />
+            <input type="button" value="Delete" class="btn btn-danger" onclick="deleteBlogItem_Confirm(this, true);" />
+        }
+
+    </div>
+
+    <hr />
+    <div>
+        @Html.Raw(Model.Content)
+    </div>
+</div>
+  <div id="counter"></div>
+
+<script>
+    var n = BlogID.getItem('on_load_counter');
+
+    if (n === null) {
+        n = 0;
+    }
+
+    n++;
+    BlogID.setItem("on_load_counter", n);
+    
+    document.getElementById('counter').innerHTML ="Views: "+ n;
+</script>
+

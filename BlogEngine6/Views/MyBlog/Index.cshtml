@@ -1,0 +1,81 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<BlogEngine6.Models.ViewModels.ViewBlogViewModel>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "My Blog";
+}
+
+<div class="row blogSearch">
+    <div class="col-xs-6 col-sm-4">
+        @using (Html.BeginForm("Index", "MyBlog", FormMethod.Get))
+        {
+            <div>
+                <label for="SearchString">Search:</label>
+                <p>
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { placeholder = "Title" })
+                    <input type="submit" value="Go" class="btn btn-primary submitBtn" />
+                </p>
+            </div>
+        }
+        <p>
+            @Html.ActionLink("New Blog Post", "Create", null, new { @class = "btn btn-success" })
+        </p>
+    </div>
+
+    @if (ViewBag.CurrentFilter != null)
+    {
+        <div class="col-xs-6 col-sm-4">
+            <a href="@Url.Action("Index", "MyBlog", new { author = ViewBag.CurrentAuthor }, Request.Url.Scheme)" class="blogFilterAnchor">
+                <div><div><span>X</span></div><b>Filter:</b> <span>@ViewBag.CurrentFilter</span></div>
+            </a>
+        </div>
+    }
+
+</div>
+
+
+@foreach (var item in Model)
+{
+    <div class="row blogItem" data-id=@item.BlogID>
+        <div class="col-md-10">
+
+            <div>
+                <h3 class="blogPostTitle">@Html.DisplayFor(modelItem => item.Title)</h3>
+                <p class="blogPostDate">@Html.DisplayFor(modelItem => item.PostDate)</p>
+                <div class="blogPostContent">
+                    @Html.Raw(item.Content)
+                    <div class="fadeHelper"></div>
+                </div>
+            </div>
+           
+            <p class="viewMore"><a href="@Url.Action("Details", "MyBlog", new { id=item.BlogID }, Request.Url.Scheme)">View more...</a></p>
+            <p class="blogTags">
+                @foreach (var tag in item.Tags)
+                {
+                    <i class="fa fa-tag" aria-hidden="true"></i> @Html.DisplayFor(modelItem => tag.Name)
+                }
+            </p>
+        </div>
+        <div class="col-md-2 blogButtons">
+            <p>@Html.ActionLink("Edit", "Edit", new { id = item.BlogID }, new { @class = "btn btn-warning" })</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value=@item.BlogID />
+                <input type="button" value="Delete" class="btn btn-danger" onclick="deleteBlogItem_Confirm(this, false);" />
+            }
+
+</div>
+    </div>
+
+}
+
+<br />
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter, author = ViewBag.CurrentAuthor }))

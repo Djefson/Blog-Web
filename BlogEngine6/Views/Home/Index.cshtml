@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BlogEngine6.Models.ViewModels.ViewBlogViewModel>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<div class="blogList">
+    <div class="blogListBody home">
+
+        <h3>Check out some featured articles...</h3>
+
+        @foreach (var item in Model)
+        {
+            @Html.Partial("Blogs/BlogPostPartial", item)
+        }
+
+        <br/>
+    </div>
+    <div class="sideBar">
+        @{Html.RenderAction("WelcomeMessage");}
+        @{Html.RenderAction("FavoriteStories", "Blogs");}
+        @{Html.RenderAction("RandomPosts", "Blogs");}
+        @{Html.RenderAction("BlogTags", "Blogs");}
+    </div>
+</div>

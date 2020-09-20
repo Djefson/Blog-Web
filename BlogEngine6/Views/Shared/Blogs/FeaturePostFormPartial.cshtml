@@ -1,0 +1,11 @@
+﻿@model BlogEngine6.Models.ViewModels.ViewBlogViewModel
+
+@if (Request.IsAuthenticated && User.IsInRole("Editor"))
+{
+    using (Html.BeginForm(null, null, null, FormMethod.Post, new { @style = "display: inline-block;" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value=@Model.BlogID />
+        <input type="button" value="Feature this Post" class="btn btn-success" onclick="featureBlogItem_Confirm(this);" />
+    }
+}

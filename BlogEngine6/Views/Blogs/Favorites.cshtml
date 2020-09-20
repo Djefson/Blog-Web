@@ -1,0 +1,37 @@
+﻿
+@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<BlogEngine6.Models.ViewModels.ViewBlogViewModel>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Favorite Blogs";
+}
+
+<div class="blogList">
+    <div class="blogListBody home">
+        <h3>Stories you love...</h3>
+        @foreach (var item in Model)
+        {
+            @Html.Partial("Blogs/BlogPostPartial", item)
+        }
+
+        <br />
+    </div>
+    <div class="sideBar">
+
+        @if (Request.IsAuthenticated)
+        {
+            <p>@Html.ActionLink("Browse Blogs", "Index", "Blogs")</p>
+        }
+
+        @{Html.RenderAction("FeaturedPosts", "Blogs");}
+        @{Html.RenderAction("FavoriteStories", "Blogs");}
+        @{Html.RenderAction("RandomPosts", "Blogs");}
+        @{Html.RenderAction("BlogTags", "Blogs");}
+    </div>
+</div>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Favorites", new { page, currentFilter = ViewBag.CurrentFilter, author = ViewBag.CurrentAuthor }))

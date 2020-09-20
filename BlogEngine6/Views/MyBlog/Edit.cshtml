@@ -1,0 +1,67 @@
+﻿@model BlogEngine6.Models.ViewModels.ViewBlogViewModel
+
+@{
+    ViewBag.Title = "Edit Blog Post";
+}
+
+<h2>Edit Blog Post</h2>
+
+
+@using (Html.BeginForm(null, null, null, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal blogForm">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.BlogID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="Content">Tell your story...</label>
+            @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @id = "editBlogContentInput", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="row form-group">
+            <div class="col-xs-4">
+                <button class="btn btn-warning showBlogTags" onclick="$('.blogTagsDiv').slideToggle(); return false;">Tag it!</button>
+                <div class="form-group blogTagsDiv" style="display: none;">
+                    <select multiple="multiple" id="tagSelect" name="selectedTags">
+                        @{
+                            List<BlogEngine6.Models.Tag> tags = ViewBag.BlogTags;
+
+                            foreach (var tag in tags)
+                            {
+                                <option value='@tag.TagID' @(Model.Tags.Contains(tag) ? "selected" : "")>@tag.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-8">
+                <input id="editBlogSubmit" type="submit" value="Post" class="btn btn-success submitBtn" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/Custom/jquery.multi-select.js"></script>
+    <script>
+         $.validator.setDefaults({ ignore: '' });
+                    // Replace the <textarea id="editor1"> with a CKEditor
+                    // instance, using default configuration.
+         CKEDITOR.replace('editBlogContentInput');
+         $('#tagSelect').multiSelect();
+    </script>
+
+}

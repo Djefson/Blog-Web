@@ -1,0 +1,11 @@
+﻿@model BlogEngine6.Models.ViewModels.ViewBlogViewModel
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm(null, null, null, FormMethod.Post, new { @style = "display: inline-block;" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="blogID" value=@Model.BlogID />
+        <button class="btn btn-default @(Model.isFavorited ? "btn-danger " : "")" title="Favorite" onclick="favoriteBlogItem(this); return false;"><i class="fa fa-heart" aria-hidden="true"></i></button>
+    }
+}

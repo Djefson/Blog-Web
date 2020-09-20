@@ -1,0 +1,88 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<BlogEngine6.Models.ViewModels.ViewBlogViewModel>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Blogs";
+}
+
+<div class="row blogSearch">
+
+    <div class="col-xs-6 col-sm-4">
+    @using (Html.BeginForm("Index", "Blogs", FormMethod.Get))
+        {
+
+            if (ViewBag.CurrentAuthor != null)
+                {
+                <input type="hidden" name="author" value="@ViewBag.CurrentAuthor">
+        }
+            if (ViewBag.CurrentTag != null)
+            {
+                <input type="hidden" name="tag" value="@ViewBag.CurrentTag">
+            }
+            <label for="SearchString">Search:</label>
+            <p>
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { placeholder = "Title or Author" })
+                <input type="submit" value="Go" class="btn btn-primary submitBtn" />
+            </p>
+        }
+    </div>
+
+    @if (ViewBag.CurrentAuthor != null)
+    {
+        <div class="col-xs-6 col-sm-4">
+            <a href="@Url.Action("Index", "Blogs", new { currentFilter=ViewBag.CurrentFilter, tag=ViewBag.CurrentTag }, Request.Url.Scheme)" class="blogFilterAnchor">
+                <div><div><span>X</span></div><b>Author:</b> @ViewBag.CurrentAuthor</div>
+            </a>
+        </div>
+    }
+
+    @if (ViewBag.CurrentFilter != null)
+    {
+        <div class="col-xs-6 col-sm-4">
+            <a href="@Url.Action("Index", "Blogs", new { author = ViewBag.CurrentAuthor, tag=ViewBag.CurrentTag }, Request.Url.Scheme)" class="blogFilterAnchor">
+                <div><div><span>X</span></div><b>Filter:</b> <span>@ViewBag.CurrentFilter</span></div>
+            </a>
+        </div>
+    }
+
+    @if (ViewBag.CurrentTag != null)
+    {
+        <div class="col-xs-6 col-sm-4">
+            <a href="@Url.Action("Index", "Blogs", new { author = ViewBag.CurrentAuthor, currentFilter = ViewBag.CurrentFilter }, Request.Url.Scheme)" class="blogFilterAnchor">
+                <div><div><span>X</span></div><b>Tag:</b> <span>@ViewBag.CurrentTag</span></div>
+            </a>
+        </div>
+    }
+
+</div>
+
+
+<div class="blogList">
+
+    <div class="blogListBody">
+        @foreach (var item in Model)
+        {
+           @Html.Partial("Blogs/BlogPostPartial", item)
+        }
+
+        <br />
+    </div>
+    <div class="sideBar">
+
+        @if (Request.IsAuthenticated)
+        {
+            <p><i class="fa fa-heart" style="color: red;" aria-hidden="true"></i> @Html.ActionLink("Favorite Blogs", "Favorites", "Blogs")</p>
+        }
+
+        @{Html.RenderAction("FeaturedPosts", "Blogs");}
+        @{Html.RenderAction("FavoriteStories", "Blogs");}
+        @{Html.RenderAction("RandomPosts", "Blogs");}
+        @{Html.RenderAction("BlogTags", "Blogs");}
+    </div>
+</div>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter, author = ViewBag.CurrentAuthor }))

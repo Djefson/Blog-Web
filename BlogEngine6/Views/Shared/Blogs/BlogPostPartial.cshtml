@@ -1,0 +1,44 @@
+﻿@model BlogEngine6.Models.ViewModels.ViewBlogViewModel
+
+<div class="blogItem" data-id=@Model.BlogID>
+    <div>
+        <h3 class="blogPostTitle">@Html.DisplayFor(modelItem => Model.Title)</h3>
+        <p class="blogPostAuthor"><a href="@Url.Action("Index", "Blogs", new { author= Model.UserName, currentFilter=ViewBag.CurrentFilter }, Request.Url.Scheme)">@Html.DisplayFor(modelItem => Model.UserName)</a></p>
+        <p class="blogPostDate">@Html.DisplayFor(modelItem => Model.PostDate)</p>
+        <div class="blogPostContent">
+            @Html.Raw(Model.Content)
+            <div class="fadeHelper"></div>
+        </div>
+    </div>
+    <p class="viewMore"><a href="@Url.Action("Details", "Blogs", new { id= Model.BlogID }, Request.Url.Scheme)">View more...</a></p>
+    <p class="blogTags">
+        @foreach (var tag in Model.Tags)
+        {
+            <i class="fa fa-tag" aria-hidden="true"></i> @Html.DisplayFor(modelItem => tag.Name)
+        }
+
+        @if (@Model.commentCount > 0)
+        {
+        <span style="float:right;">@Html.DisplayFor(modelItem => Model.commentCount) response@(Model.commentCount > 1 ? "s" : "")</span>
+        }
+    </p>
+ 
+    <div id="counter"></div>
+    <script>
+    var n = localStorage.getItem('on_load_counter');
+
+    if (n === null) {
+        n = 0;
+    }
+
+    n++; 
+    localStorage.setItem("on_load_counter", n);
+    
+    document.getElementById('counter').innerHTML ="Views: "+ n;
+    </script>
+
+    @Html.Partial("Blogs/FavoritePostFormPartial", Model)
+    @Html.Partial("Blogs/FeaturePostFormPartial", Model)
+
+</div>
+
